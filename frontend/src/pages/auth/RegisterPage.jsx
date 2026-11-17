@@ -45,7 +45,7 @@ const RegisterPage = () => {
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
         <div className="bg-white dark:bg-slate-900 py-8 px-6 sm:px-10 shadow-2xl rounded-3xl border border-slate-200 dark:border-slate-800">
-          <form className="space-y-3.5" onSubmit={handleSubmit}>
+          <form className="space-y-3.5" onSubmit={handleSubmit} autoComplete="off">
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
               <div className="relative">
@@ -55,6 +55,7 @@ const RegisterPage = () => {
                 <input
                   type="text"
                   required
+                  autoComplete="off"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Alex Rivera"
@@ -72,6 +73,7 @@ const RegisterPage = () => {
                 <input
                   type="email"
                   required
+                  autoComplete="off"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="name@campusconnect.edu"
@@ -90,6 +92,7 @@ const RegisterPage = () => {
                   type="password"
                   required
                   minLength={6}
+                  autoComplete="new-password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="••••••••••••"
