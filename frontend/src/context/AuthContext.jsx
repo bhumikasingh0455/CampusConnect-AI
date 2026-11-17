@@ -55,7 +55,8 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: receivedUser };
       }
     } catch (error) {
-      const msg = error.response?.data?.message || 'Login failed. Please check credentials.';
+      const msg = error.response?.data?.message || 
+        (error.message?.includes('Network') ? 'Unable to reach backend server. Please verify API is running on port 5000.' : 'Login failed. Please check credentials.');
       toast.error(msg);
       return { success: false, message: msg };
     }

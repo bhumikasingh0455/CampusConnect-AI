@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Sparkles, ArrowRight, Lock, Mail, Eye, EyeOff, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import Button from '../../components/common/Button';
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -10,15 +11,33 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showDemoCredentials, setShowDemoCredentials] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { user, isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
+
+  // If already authenticated, redirect to role dashboard
+  useEffect(() => {
+    if (isAuthenticated && user?.role) {
+      const redirects = {
+        admin: '/admin/dashboard',
+        warden: '/warden/dashboard',
+        faculty: '/faculty/dashboard',
+        student: '/student/dashboard',
+        parent: '/parent/dashboard'
+      };
+      navigate(redirects[user.role] || '/student/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleLogin = async (e) => {
     if (e) e.preventDefault();
-    if (!email || !password) return;
+    if (!email.trim() || !password) {
+      toast.error('Please enter both institutional email and password.');
+      return;
+    }
 
     setIsLoading(true);
-    const result = await login(email.trim(), password);
+    const cleanEmail = email.trim().toLowerCase();
+    const result = await login(cleanEmail, password);
     setIsLoading(false);
 
     if (result.success) {

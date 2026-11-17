@@ -25,6 +25,7 @@ const RegisterPage = () => {
     if (result.success) {
       const redirects = {
         admin: '/admin/dashboard',
+        warden: '/warden/dashboard',
         faculty: '/faculty/dashboard',
         student: '/student/dashboard',
         parent: '/parent/dashboard'

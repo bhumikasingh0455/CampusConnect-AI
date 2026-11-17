@@ -26,6 +26,7 @@ const ProtectedRoute = ({ allowedRoles = [] }) => {
     // Redirect to user's designated dashboard
     const roleRedirects = {
       admin: '/admin/dashboard',
+      warden: '/warden/dashboard',
       faculty: '/faculty/dashboard',
       student: '/student/dashboard',
       parent: '/parent/dashboard'
