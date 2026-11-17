@@ -25,6 +25,7 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
 const studyMaterialRoutes = require('./routes/studyMaterialRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const hostelRoutes = require('./routes/hostelRoutes');
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/leaves', leaveRoutes);
 app.use('/api/materials', studyMaterialRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/hostel', hostelRoutes);
 
 // 404 handler for unknown routes
 app.use('*', (req, res) => {

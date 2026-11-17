@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Sparkles, Shield, User, GraduationCap, Users, ArrowRight, Lock, Mail } from 'lucide-react';
+import { Sparkles, Shield, User, GraduationCap, Users, ArrowRight, Lock, Mail, Building2 } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const LoginPage = () => {
@@ -22,6 +22,7 @@ const LoginPage = () => {
     if (result.success) {
       const redirects = {
         admin: '/admin/dashboard',
+        warden: '/warden/dashboard',
         faculty: '/faculty/dashboard',
         student: '/student/dashboard',
         parent: '/parent/dashboard'
@@ -43,6 +44,14 @@ const LoginPage = () => {
       name: 'Alex Rivera (6th Sem B.Tech)',
       icon: GraduationCap,
       color: 'border-indigo-500/30 hover:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400'
+    },
+    {
+      role: 'Warden',
+      email: 'warden@campusconnect.edu',
+      password: 'Warden@123',
+      name: 'Dr. Marcus Vance (Chief Warden)',
+      icon: Building2,
+      color: 'border-amber-500/30 hover:border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400'
     },
     {
       role: 'Faculty',

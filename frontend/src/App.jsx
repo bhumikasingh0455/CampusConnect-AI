@@ -42,6 +42,26 @@ import AdminAuditLogs from './pages/admin/AdminAuditLogs';
 // Parent Pages
 import ParentDashboard from './pages/parent/ParentDashboard';
 
+// Student Hostel Pages
+import HostelStudentDashboard from './pages/hostel/HostelStudentDashboard';
+import HostelMyRoom from './pages/hostel/HostelMyRoom';
+import HostelMessMenu from './pages/hostel/HostelMessMenu';
+import HostelLeaves from './pages/hostel/HostelLeaves';
+import HostelComplaints from './pages/hostel/HostelComplaints';
+import HostelFees from './pages/hostel/HostelFees';
+import HostelGatePass from './pages/hostel/HostelGatePass';
+
+// Warden Pages
+import WardenDashboard from './pages/warden/WardenDashboard';
+import WardenRooms from './pages/warden/WardenRooms';
+import WardenLeaves from './pages/warden/WardenLeaves';
+import WardenComplaints from './pages/warden/WardenComplaints';
+import WardenMess from './pages/warden/WardenMess';
+import WardenGate from './pages/warden/WardenGate';
+
+// Admin Hostel Page
+import AdminHostel from './pages/admin/AdminHostel';
+
 // Shared Pages
 import AnnouncementsPage from './pages/shared/AnnouncementsPage';
 import ProfilePage from './pages/shared/ProfilePage';
@@ -55,6 +75,7 @@ const RootRedirect = () => {
 
   const roleRedirects = {
     admin: '/admin/dashboard',
+    warden: '/warden/dashboard',
     faculty: '/faculty/dashboard',
     student: '/student/dashboard',
     parent: '/parent/dashboard'
@@ -86,12 +107,29 @@ function App() {
                   {/* Student Routes */}
                   <Route element={<ProtectedRoute allowedRoles={['student']} />}>
                     <Route path="/student/dashboard" element={<StudentDashboard />} />
+                    <Route path="/student/hostel" element={<HostelStudentDashboard />} />
+                    <Route path="/student/hostel/room" element={<HostelMyRoom />} />
+                    <Route path="/student/hostel/mess" element={<HostelMessMenu />} />
+                    <Route path="/student/hostel/leaves" element={<HostelLeaves />} />
+                    <Route path="/student/hostel/complaints" element={<HostelComplaints />} />
+                    <Route path="/student/hostel/fees" element={<HostelFees />} />
+                    <Route path="/student/hostel/gate-pass" element={<HostelGatePass />} />
                     <Route path="/student/attendance" element={<StudentAttendance />} />
                     <Route path="/student/assignments" element={<StudentAssignments />} />
                     <Route path="/student/timetable" element={<StudentTimetable />} />
                     <Route path="/student/grades" element={<StudentGrades />} />
                     <Route path="/student/materials" element={<StudentMaterials />} />
                     <Route path="/student/leave" element={<StudentLeave />} />
+                  </Route>
+
+                  {/* Warden Routes */}
+                  <Route element={<ProtectedRoute allowedRoles={['warden']} />}>
+                    <Route path="/warden/dashboard" element={<WardenDashboard />} />
+                    <Route path="/warden/rooms" element={<WardenRooms />} />
+                    <Route path="/warden/leaves" element={<WardenLeaves />} />
+                    <Route path="/warden/complaints" element={<WardenComplaints />} />
+                    <Route path="/warden/mess" element={<WardenMess />} />
+                    <Route path="/warden/gate" element={<WardenGate />} />
                   </Route>
 
                   {/* Faculty Routes */}
@@ -108,6 +146,7 @@ function App() {
                   {/* Admin Routes */}
                   <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                    <Route path="/admin/hostel" element={<AdminHostel />} />
                     <Route path="/admin/students" element={<AdminStudents />} />
                     <Route path="/admin/faculty" element={<AdminFaculty />} />
                     <Route path="/admin/departments" element={<AdminDepartments />} />

@@ -17,6 +17,17 @@ const Notification = require('../models/Notification');
 const LeaveRequest = require('../models/LeaveRequest');
 const StudyMaterial = require('../models/StudyMaterial');
 const AuditLog = require('../models/AuditLog');
+const Hostel = require('../models/Hostel');
+const HostelBlock = require('../models/HostelBlock');
+const HostelRoom = require('../models/HostelRoom');
+const RoomAllocation = require('../models/RoomAllocation');
+const HostelLeaveRequest = require('../models/HostelLeaveRequest');
+const HostelComplaint = require('../models/HostelComplaint');
+const HostelFee = require('../models/HostelFee');
+const MessMenu = require('../models/MessMenu');
+const MessFeedback = require('../models/MessFeedback');
+const HostelGateLog = require('../models/HostelGateLog');
+const HostelAnnouncement = require('../models/HostelAnnouncement');
 
 const seedData = async () => {
   try {
@@ -42,7 +53,18 @@ const seedData = async () => {
       Notification.deleteMany({}),
       LeaveRequest.deleteMany({}),
       StudyMaterial.deleteMany({}),
-      AuditLog.deleteMany({})
+      AuditLog.deleteMany({}),
+      Hostel.deleteMany({}),
+      HostelBlock.deleteMany({}),
+      HostelRoom.deleteMany({}),
+      RoomAllocation.deleteMany({}),
+      HostelLeaveRequest.deleteMany({}),
+      HostelComplaint.deleteMany({}),
+      HostelFee.deleteMany({}),
+      MessMenu.deleteMany({}),
+      MessFeedback.deleteMany({}),
+      HostelGateLog.deleteMany({}),
+      HostelAnnouncement.deleteMany({})
     ]);
 
     console.log('[Seed] Database cleaned.');
@@ -101,6 +123,24 @@ const seedData = async () => {
       role: 'parent',
       phone: '+1 (555) 016-5521',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'
+    });
+
+    const wardenUser = await User.create({
+      name: 'Dr. Marcus Vance',
+      email: 'warden@campusconnect.edu',
+      password: 'Warden@123',
+      role: 'warden',
+      phone: '+1 (555) 019-7711',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150'
+    });
+
+    const studentUser3 = await User.create({
+      name: 'Devon Lee',
+      email: 'devon.lee@campusconnect.edu',
+      password: 'Student@123',
+      role: 'student',
+      phone: '+1 (555) 017-4491',
+      avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150'
     });
 
     // 2. Create Departments
@@ -589,7 +629,422 @@ const seedData = async () => {
       isRead: false
     });
 
-    // 14. Audit Logs
+    // 14. Hostel System Seed Data
+    console.log('[Seed] Seeding Hostels, Blocks, and Rooms...');
+    const boysHostel = await Hostel.create({
+      name: 'Aryabhata Boys Residence Hall',
+      code: 'BH-1',
+      type: 'Boys',
+      description: 'Premier air-conditioned residential facility for engineering and computing students.',
+      location: 'North Campus, Sector 4',
+      contactNumber: '+1 (555) 019-8800',
+      wardens: [wardenUser._id],
+      chiefWarden: wardenUser._id,
+      totalRooms: 60,
+      totalCapacity: 120,
+      isActive: true
+    });
+
+    const girlsHostel = await Hostel.create({
+      name: 'Kalpana Chawla Girls Residence Hall',
+      code: 'GH-1',
+      type: 'Girls',
+      description: 'Secure, modern residential complex with gym, study halls, and high-speed Wi-Fi.',
+      location: 'South Campus, Sector 2',
+      contactNumber: '+1 (555) 019-8822',
+      wardens: [wardenUser._id],
+      chiefWarden: wardenUser._id,
+      totalRooms: 50,
+      totalCapacity: 100,
+      isActive: true
+    });
+
+    const blockA = await HostelBlock.create({
+      hostel: boysHostel._id,
+      name: 'Block A (Arya)',
+      code: 'BLK-A',
+      blockName: 'Block A (Arya)',
+      totalFloors: 4,
+      description: 'Senior B.Tech & Research Scholars Wing'
+    });
+
+    const blockB = await HostelBlock.create({
+      hostel: boysHostel._id,
+      name: 'Block B (Bhaskara)',
+      code: 'BLK-B',
+      blockName: 'Block B (Bhaskara)',
+      totalFloors: 4,
+      description: 'Junior Undergraduate Wing'
+    });
+
+    const blockGirlsA = await HostelBlock.create({
+      hostel: girlsHostel._id,
+      name: 'Block A (Maitreyi)',
+      code: 'BLK-GA',
+      blockName: 'Block A (Maitreyi)',
+      totalFloors: 4,
+      description: 'Undergraduate & Postgraduate Wing'
+    });
+
+    // Rooms for Block A
+    const room204 = await HostelRoom.create({
+      hostel: boysHostel._id,
+      block: blockA._id,
+      roomNumber: '204',
+      floor: 2,
+      roomType: 'Double',
+      capacity: 2,
+      occupiedBeds: 2,
+      monthlyRent: 4800,
+      amenities: ['High-speed Wi-Fi', 'Attached Washroom', 'Air Conditioner', 'Study Desk', 'Ergonomic Chair', 'Wardrobe', 'Balcony'],
+      status: 'Full'
+    });
+
+    const room205 = await HostelRoom.create({
+      hostel: boysHostel._id,
+      block: blockA._id,
+      roomNumber: '205',
+      floor: 2,
+      roomType: 'Single',
+      capacity: 1,
+      occupiedBeds: 0,
+      monthlyRent: 6500,
+      amenities: ['High-speed Wi-Fi', 'Attached Washroom', 'Air Conditioner', 'Study Desk', 'Ergonomic Chair', 'Mini Fridge'],
+      status: 'Available'
+    });
+
+    const room206 = await HostelRoom.create({
+      hostel: boysHostel._id,
+      block: blockA._id,
+      roomNumber: '206',
+      floor: 2,
+      roomType: 'Double',
+      capacity: 2,
+      occupiedBeds: 1,
+      monthlyRent: 4800,
+      amenities: ['High-speed Wi-Fi', 'Attached Washroom', 'Study Desk', 'Ergonomic Chair'],
+      status: 'Available'
+    });
+
+    const room301 = await HostelRoom.create({
+      hostel: boysHostel._id,
+      block: blockA._id,
+      roomNumber: '301',
+      floor: 3,
+      roomType: 'Triple',
+      capacity: 3,
+      occupiedBeds: 0,
+      monthlyRent: 3800,
+      amenities: ['High-speed Wi-Fi', 'Attached Washroom', 'Study Desks', 'Wardrobes'],
+      status: 'Available'
+    });
+
+    // Girls room
+    await HostelRoom.create({
+      hostel: girlsHostel._id,
+      block: blockGirlsA._id,
+      roomNumber: '102',
+      floor: 1,
+      roomType: 'Double',
+      capacity: 2,
+      occupiedBeds: 1,
+      monthlyRent: 4800,
+      amenities: ['High-speed Wi-Fi', 'Attached Washroom', 'Air Conditioner', 'Study Desk'],
+      status: 'Available'
+    });
+
+    // 15. Room Allocations
+    console.log('[Seed] Allocating rooms (Alex Rivera & Devon Lee as roommates in Room 204)...');
+    const alexAllocation = await RoomAllocation.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      block: blockA._id,
+      room: room204._id,
+      bedNumber: 1,
+      academicYear: '2024-2025',
+      allocatedBy: wardenUser._id,
+      status: 'Active',
+      remarks: 'Primary merit allocation'
+    });
+
+    const devonAllocation = await RoomAllocation.create({
+      student: studentUser3._id,
+      hostel: boysHostel._id,
+      block: blockA._id,
+      room: room204._id,
+      bedNumber: 2,
+      academicYear: '2024-2025',
+      allocatedBy: wardenUser._id,
+      status: 'Active',
+      remarks: 'Allocated to Room 204 Bed 2'
+    });
+
+    // 16. Weekly Mess Menu
+    console.log('[Seed] Seeding 7-Day nutritious mess menu...');
+    const days = [
+      {
+        dayOfWeek: 'Monday',
+        breakfast: { items: ['Masala Dosa with Sambar & Coconut Chutney', 'Boiled Eggs / Sprouts', 'Tea / Fresh Coffee', 'Seasonal Fresh Fruits'], timing: '07:30 AM - 09:30 AM' },
+        lunch: { items: ['Paneer Butter Masala', 'Yellow Dal Tadka', 'Jeera Rice', 'Butter Roti', 'Cucumber Salad & Mint Raita'], timing: '12:30 PM - 02:30 PM' },
+        snacks: { items: ['Crispy Samosa with Mint Chutney', 'Hot Masala Chai'], timing: '05:00 PM - 06:15 PM' },
+        dinner: { items: ['Kadai Chicken / Malai Kofta', 'Dal Makhani', 'Steamed Basmati Rice', 'Tandoori Roti', 'Gulab Jamun'], timing: '07:45 PM - 09:45 PM' }
+      },
+      {
+        dayOfWeek: 'Tuesday',
+        breakfast: { items: ['Poha with Roasted Peanuts', 'Upma', 'Boiled Eggs', 'Milk / Tea / Coffee', 'Bananas'], timing: '07:30 AM - 09:30 AM' },
+        lunch: { items: ['Aloo Gobi Adraki', 'Rajma Masala', 'Steamed Rice', 'Tawa Chapati', 'Kachumber Salad'], timing: '12:30 PM - 02:30 PM' },
+        snacks: { items: ['Veg Grilled Sandwich', 'Lemon Iced Tea'], timing: '05:00 PM - 06:15 PM' },
+        dinner: { items: ['Mixed Veg Handi', 'Chana Dal Fry', 'Jeera Rice', 'Phulka', 'Fruit Custard'], timing: '07:45 PM - 09:45 PM' }
+      },
+      {
+        dayOfWeek: 'Wednesday',
+        breakfast: { items: ['Aloo Paratha with Curd & Pickle', 'Poha', 'Boiled Eggs', 'Tea / Coffee', 'Apples'], timing: '07:30 AM - 09:30 AM' },
+        lunch: { items: ['Palak Paneer', 'Moong Dal Fry', 'Curd Rice', 'Steamed Rice', 'Chapati', 'Papad'], timing: '12:30 PM - 02:30 PM' },
+        snacks: { items: ['White Sauce Pasta with Herbs', 'Filter Coffee'], timing: '05:00 PM - 06:15 PM' },
+        dinner: { items: ['Butter Chicken / Shahi Paneer', 'Dal Tadka', 'Peas Pulao', 'Butter Naan', 'Rasgulla'], timing: '07:45 PM - 09:45 PM' }
+      },
+      {
+        dayOfWeek: 'Thursday',
+        breakfast: { items: ['Idli Sambar with Tomato & Coconut Chutney', 'Vada', 'Sprouts Salad', 'Tea / Coffee'], timing: '07:30 AM - 09:30 AM' },
+        lunch: { items: ['Chole Bhature with Pickled Onions', 'Jeera Rice', 'Boondi Raita', 'Green Salad'], timing: '12:30 PM - 02:30 PM' },
+        snacks: { items: ['Pani Puri & Bhel Puri Live Counter', 'Cardamom Tea'], timing: '05:00 PM - 06:15 PM' },
+        dinner: { items: ['Bhindi Do Pyaza', 'Panchmel Dal', 'Steamed Rice', 'Roti', 'Moong Dal Halwa'], timing: '07:45 PM - 09:45 PM' }
+      },
+      {
+        dayOfWeek: 'Friday',
+        breakfast: { items: ['Methi Thepla with Chunda', 'Oatmeal Porridge', 'Boiled Eggs', 'Fresh Orange Juice / Tea'], timing: '07:30 AM - 09:30 AM' },
+        lunch: { items: ['Mushroom Matar Masala', 'Dal Palak', 'Kashmiri Pulao', 'Tandoori Roti', 'Onion Salad'], timing: '12:30 PM - 02:30 PM' },
+        snacks: { items: ['French Fries with Peri-Peri Dip', 'Cold Coffee'], timing: '05:00 PM - 06:15 PM' },
+        dinner: { items: ['Egg Curry / Paneer Tikka Masala', 'Dal Fry', 'Steamed Rice', 'Butter Roti', 'Ice Cream Sundae'], timing: '07:45 PM - 09:45 PM' }
+      },
+      {
+        dayOfWeek: 'Saturday',
+        breakfast: { items: ['Puri Bhaji with Halwa', 'Cornflakes with Warm Milk', 'Tea / Coffee'], timing: '07:30 AM - 09:30 AM' },
+        lunch: { items: ['Hyderabadi Dum Biryani (Chicken/Veg)', 'Mirchi Ka Salan', 'Burani Raita', 'Roasted Papad'], timing: '12:30 PM - 02:30 PM' },
+        snacks: { items: ['Veg Cutlets with Mint Mayo', 'Ginger Tea'], timing: '05:00 PM - 06:15 PM' },
+        dinner: { items: ['Baingan Bharta', 'Yellow Dal Double Tadka', 'Steamed Rice', 'Chapati', 'Kheer'], timing: '07:45 PM - 09:45 PM' }
+      },
+      {
+        dayOfWeek: 'Sunday',
+        isSpecial: true,
+        specialNote: 'Special Sunday Grand Feast with Live Counters & Desserts',
+        breakfast: { items: ['Continental Spread: Pancakes with Maple Syrup, Hash Browns, Scrambled Eggs, Croissants, Fresh Watermelon Juice'], timing: '08:00 AM - 10:30 AM' },
+        lunch: { items: ['Special Sunday Thali: Dal Makhani, Paneer Lababdar, Dum Aloo, Jeera Rice, Garlic Butter Naan, Gulab Jamun, Paan'], timing: '12:30 PM - 03:00 PM' },
+        snacks: { items: ['Chaat Counter: Dahi Puri, Sev Puri, Masala Chai'], timing: '05:00 PM - 06:30 PM' },
+        dinner: { items: ['Mutton Rogan Josh / Paneer Pasanda', 'Dal Bukhara', 'Saffron Pulao', 'Rumali Roti', 'Warm Brownie with Vanilla Ice Cream'], timing: '07:45 PM - 10:00 PM' }
+      }
+    ];
+
+    for (const menuData of days) {
+      await MessMenu.create({
+        hostel: boysHostel._id,
+        ...menuData,
+        updatedBy: wardenUser._id
+      });
+    }
+
+    // Mess Feedback
+    await MessFeedback.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      mealType: 'Breakfast',
+      rating: 5,
+      hygieneRating: 5,
+      foodQualityRating: 5,
+      comments: 'The Sunday pancakes and South Indian dosas are outstanding! Keep it up.'
+    });
+
+    await MessFeedback.create({
+      student: studentUser3._id,
+      hostel: boysHostel._id,
+      mealType: 'Lunch',
+      rating: 4,
+      hygieneRating: 4,
+      foodQualityRating: 4,
+      comments: 'Paneer butter masala and dal makhani tasted rich and hygienic.'
+    });
+
+    // 17. Hostel Leave Requests
+    console.log('[Seed] Generating sample hostel leave applications...');
+    const depDate = new Date();
+    depDate.setDate(depDate.getDate() + 2);
+    const retDate = new Date();
+    retDate.setDate(retDate.getDate() + 5);
+
+    await HostelLeaveRequest.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      room: room204._id,
+      departureDate: depDate,
+      expectedReturnDate: retDate,
+      destination: 'San Francisco, CA - ACM Inter-University Hackathon 2026',
+      reason: 'Representing university in National Collegiate Hackathon finals',
+      emergencyContact: {
+        name: 'Robert Rivera',
+        phone: '+1 (555) 016-5521',
+        relationship: 'Father'
+      },
+      parentConsentConfirmed: true,
+      status: 'Approved',
+      reviewedBy: wardenUser._id,
+      reviewRemarks: 'Approved. Best of luck for the Hackathon finals!',
+      reviewedAt: new Date()
+    });
+
+    const depDate2 = new Date();
+    depDate2.setDate(depDate2.getDate() + 1);
+    const retDate2 = new Date();
+    retDate2.setDate(retDate2.getDate() + 3);
+
+    await HostelLeaveRequest.create({
+      student: studentUser3._id,
+      hostel: boysHostel._id,
+      room: room204._id,
+      departureDate: depDate2,
+      expectedReturnDate: retDate2,
+      destination: 'San Diego, CA - Family Weekend',
+      reason: 'Attending sibling graduation ceremony',
+      emergencyContact: {
+        name: 'Helen Lee',
+        phone: '+1 (555) 016-7788',
+        relationship: 'Mother'
+      },
+      parentConsentConfirmed: true,
+      status: 'Pending'
+    });
+
+    // 18. Hostel Complaints & Maintenance
+    console.log('[Seed] Seeding hostel maintenance requests...');
+    await HostelComplaint.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      room: room204._id,
+      category: 'Wi-Fi',
+      title: 'Intermittent 5GHz Wi-Fi dropouts on Floor 2',
+      description: 'The access point in Corridor 2A disconnects during peak evening hours (08:00 PM - 10:00 PM).',
+      priority: 'High',
+      status: 'In Progress',
+      assignedStaff: {
+        name: 'Rajesh Sharma (Senior Network Engineer)',
+        phone: '+1 (555) 012-4499',
+        assignedAt: new Date()
+      },
+      resolutionNotes: 'Technician dispatched to replace the PoE switch and optimize channel frequency.'
+    });
+
+    await HostelComplaint.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      room: room204._id,
+      category: 'Plumbing',
+      title: 'Washroom water tap aerator replacement',
+      description: 'Minor drip in the attached washroom washbasin faucet.',
+      priority: 'Low',
+      status: 'Resolved',
+      assignedStaff: {
+        name: 'Carlos Mendoza (Hostel Plumber)',
+        phone: '+1 (555) 012-3321',
+        assignedAt: new Date(Date.now() - 24 * 60 * 60 * 1000)
+      },
+      resolutionNotes: 'New ceramic cartridge and aerator fitted. Tested leak-free.',
+      resolvedBy: wardenUser._id,
+      resolvedAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+      studentRating: 5,
+      studentFeedback: 'Fixed promptly within 2 hours. Very polite technician!'
+    });
+
+    // 19. Hostel Fee Records
+    console.log('[Seed] Seeding hostel fee balances & receipts...');
+    await HostelFee.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      roomAllocation: alexAllocation._id,
+      academicYear: '2024-2025',
+      term: 'Semester 1',
+      roomCharges: 24000,
+      messCharges: 18000,
+      securityDeposit: 5000,
+      maintenanceCharges: 2000,
+      totalAmount: 49000,
+      paidAmount: 25000,
+      outstandingAmount: 24000,
+      status: 'Partially Paid',
+      dueDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
+      payments: [
+        {
+          transactionId: 'TXN-HOSTEL-908124',
+          amount: 25000,
+          paymentMethod: 'UPI',
+          paymentDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+          receiptNumber: 'REC-HST-004921',
+          isVerified: true
+        }
+      ]
+    });
+
+    // 20. Hostel Gate Movement Audit Logs
+    console.log('[Seed] Seeding student gate movement history...');
+    await HostelGateLog.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      room: room204._id,
+      movementType: 'Check-Out',
+      timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
+      destination: 'Central University Library & Innovation Hub',
+      reason: 'Capstone Project Team Research',
+      isLateEntry: false,
+      hasApprovedLeave: false,
+      verifiedBy: wardenUser._id,
+      remarks: 'Student left with laptop and student ID card.'
+    });
+
+    await HostelGateLog.create({
+      student: studentUser._id,
+      hostel: boysHostel._id,
+      room: room204._id,
+      movementType: 'Check-In',
+      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      destination: 'Hostel Main Gate',
+      reason: 'Returned from Library',
+      isLateEntry: false,
+      hasApprovedLeave: false,
+      verifiedBy: wardenUser._id,
+      remarks: 'Timely return before evening roll call.'
+    });
+
+    // 21. Hostel Announcements
+    console.log('[Seed] Broadcasting official hostel notices...');
+    await HostelAnnouncement.create({
+      title: '⚡ Scheduled High-Speed Fiber Backbone Maintenance',
+      content: 'Campus IT will be performing an optical fiber upgrade between 02:00 AM and 04:00 AM on Thursday. Internet service will experience brief disruptions.',
+      hostel: boysHostel._id,
+      author: wardenUser._id,
+      priority: 'normal',
+      category: 'Maintenance',
+      isPinned: true
+    });
+
+    await HostelAnnouncement.create({
+      title: '🍲 Grand Sunday Festive Feast & Extended Mess Hours',
+      content: 'Join us this Sunday for our monthly celebratory dinner featuring Live Chaat Counter, Biryani, and Italian Gelato. Mess timing extended until 10:30 PM.',
+      hostel: null, // Broadcast to all hostels
+      author: wardenUser._id,
+      priority: 'normal',
+      category: 'Mess',
+      isPinned: true
+    });
+
+    await HostelAnnouncement.create({
+      title: '🚨 Digital QR Gate Pass Enforcement Starting Monday',
+      content: 'All residents must present their digital QR pass from the CampusConnect mobile portal during evening entry past 08:30 PM. Ensure your identity profile is active.',
+      hostel: null,
+      author: wardenUser._id,
+      priority: 'urgent',
+      category: 'Rules',
+      isPinned: true
+    });
+
+    // 22. Audit Logs
     console.log('[Seed] Generating initial system audit logs...');
     await AuditLog.create({
       action: 'SYSTEM_INITIALIZATION',
@@ -605,6 +1060,13 @@ const seedData = async () => {
       details: { department: 'CSE', courses: 2, subjects: 4 }
     });
 
+    await AuditLog.create({
+      action: 'HOSTEL_MODULE_INITIALIZED',
+      performedBy: adminUser._id,
+      targetResource: 'Hostel System',
+      details: { hostels: 2, blocks: 3, rooms: 5, chiefWarden: 'Dr. Marcus Vance' }
+    });
+
     console.log('===========================================================');
     console.log('🎉 SEEDING COMPLETED SUCCESSFULLY!');
     console.log('===========================================================');
@@ -614,6 +1076,7 @@ const seedData = async () => {
     console.log('2. Faculty: faculty@campusconnect.edu  | Password: Faculty@123');
     console.log('3. Student: student@campusconnect.edu  | Password: Student@123');
     console.log('4. Parent:  parent@campusconnect.edu   | Password: Parent@123');
+    console.log('5. Warden:  warden@campusconnect.edu   | Password: Warden@123');
     console.log('===========================================================');
 
     await mongoose.disconnect();

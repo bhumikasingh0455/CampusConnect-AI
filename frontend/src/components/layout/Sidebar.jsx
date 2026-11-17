@@ -17,7 +17,13 @@ import {
   Sparkles,
   Award,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Bed,
+  Utensils,
+  CreditCard,
+  Wrench,
+  QrCode,
+  ArrowRightLeft
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -28,13 +34,30 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       case 'student':
         return [
           { name: 'Dashboard', path: '/student/dashboard', icon: LayoutDashboard },
+          { name: 'Hostel Hub', path: '/student/hostel', icon: Building2 },
+          { name: 'My Room', path: '/student/hostel/room', icon: Bed },
+          { name: 'Mess Timetable', path: '/student/hostel/mess', icon: Utensils },
+          { name: 'Hostel Leaves', path: '/student/hostel/leaves', icon: CalendarDays },
+          { name: 'Maintenance Desk', path: '/student/hostel/complaints', icon: Wrench },
+          { name: 'Hostel Dues', path: '/student/hostel/fees', icon: CreditCard },
+          { name: 'Digital Gate Pass', path: '/student/hostel/gate-pass', icon: QrCode },
           { name: 'Attendance', path: '/student/attendance', icon: CalendarCheck2 },
           { name: 'Assignments', path: '/student/assignments', icon: FileSpreadsheet },
           { name: 'Class Timetable', path: '/student/timetable', icon: CalendarDays },
           { name: 'Grades & Marks', path: '/student/grades', icon: Award },
           { name: 'Study Materials', path: '/student/materials', icon: BookOpen },
-          { name: 'Leave Requests', path: '/student/leave', icon: ClipboardList },
-          { name: 'Announcements', path: '/announcements', icon: Bell },
+          { name: 'Academic Leave', path: '/student/leave', icon: ClipboardList },
+          { name: 'Campus Notices', path: '/announcements', icon: Bell },
+        ];
+      case 'warden':
+        return [
+          { name: 'Warden Command', path: '/warden/dashboard', icon: LayoutDashboard },
+          { name: 'Room Allocations', path: '/warden/rooms', icon: Bed },
+          { name: 'Leave Approvals', path: '/warden/leaves', icon: CalendarDays },
+          { name: 'Maintenance Desk', path: '/warden/complaints', icon: Wrench },
+          { name: 'Mess Timetable', path: '/warden/mess', icon: Utensils },
+          { name: 'Gate & Curfew', path: '/warden/gate', icon: ArrowRightLeft },
+          { name: 'Campus Notices', path: '/announcements', icon: Bell },
         ];
       case 'faculty':
         return [
@@ -49,6 +72,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       case 'admin':
         return [
           { name: 'System Overview', path: '/admin/dashboard', icon: LayoutDashboard },
+          { name: 'Hostel Management', path: '/admin/hostel', icon: Building2 },
           { name: 'Student Directory', path: '/admin/students', icon: GraduationCap },
           { name: 'Faculty Directory', path: '/admin/faculty', icon: Users },
           { name: 'Departments', path: '/admin/departments', icon: Building2 },
@@ -71,6 +95,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   const roleColors = {
     admin: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+    warden: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
     faculty: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
     student: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
     parent: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
