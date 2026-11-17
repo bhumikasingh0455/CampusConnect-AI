@@ -51,10 +51,23 @@ const LoginPage = () => {
     }
   };
 
-  const handleQuickLogin = (roleEmail, rolePassword, roleName) => {
+  const handleQuickLogin = async (roleEmail, rolePassword) => {
     setEmail(roleEmail);
     setPassword(rolePassword);
-    toast.success(`Selected ${roleName} credentials`);
+    setIsLoading(true);
+    const result = await login(roleEmail.toLowerCase(), rolePassword);
+    setIsLoading(false);
+
+    if (result.success) {
+      const redirects = {
+        admin: '/admin/dashboard',
+        warden: '/warden/dashboard',
+        faculty: '/faculty/dashboard',
+        student: '/student/dashboard',
+        parent: '/parent/dashboard'
+      };
+      navigate(redirects[result.user.role] || '/student/dashboard');
+    }
   };
 
   const demoAccounts = [
