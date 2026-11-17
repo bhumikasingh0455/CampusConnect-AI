@@ -19,12 +19,12 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return errorResponse(res, 'Invalid email or password', 401);
+      return errorResponse(res, `No account registered with '${email}'. Please register first or use an existing demo account.`, 401);
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return errorResponse(res, 'Invalid email or password', 401);
+      return errorResponse(res, 'Incorrect password. Please verify your password and try again.', 401);
     }
 
     if (!user.isActive) {

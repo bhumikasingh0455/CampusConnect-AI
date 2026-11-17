@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showDemoCredentials, setShowDemoCredentials] = useState(false);
+  const [showDemoCredentials, setShowDemoCredentials] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { user, isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
@@ -164,23 +164,44 @@ const LoginPage = () => {
 
             {showDemoCredentials && (
               <div className="mt-3 space-y-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 text-xs">
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
-                  Enter any of these registered credentials manually into the fields above:
-                </p>
+                <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-[11px] text-amber-900 dark:text-amber-200 flex items-start gap-1.5 mb-2">
+                  <Info className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Only registered accounts can log in:</strong> You can type any demo account below, or click{' '}
+                    <Link to="/register" className="font-bold underline text-indigo-600 dark:text-indigo-400">
+                      Register Demo Account
+                    </Link>{' '}
+                    to create your own account first.
+                  </span>
+                </div>
+
                 <div className="space-y-1.5">
                   {demoCredentials.map((c) => (
                     <div
                       key={c.role}
-                      className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px]"
+                      className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors"
                     >
                       <div className="flex items-center gap-1.5">
                         <span className="font-bold text-slate-800 dark:text-slate-200">{c.role}</span>
                         <span className="text-slate-400">({c.name})</span>
                       </div>
-                      <div className="font-mono text-slate-600 dark:text-slate-300 select-all">
-                        <span className="text-indigo-600 dark:text-indigo-400">{c.email}</span>
-                        <span className="text-slate-400 mx-1">|</span>
-                        <span>{c.pass}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="font-mono text-slate-600 dark:text-slate-300 select-all">
+                          <span className="text-indigo-600 dark:text-indigo-400">{c.email}</span>
+                          <span className="text-slate-400 mx-1">|</span>
+                          <span>{c.pass}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEmail(c.email);
+                            setPassword(c.pass);
+                            toast.success(`Loaded ${c.role} credentials`);
+                          }}
+                          className="px-2 py-0.5 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 rounded-lg border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-colors cursor-pointer"
+                        >
+                          Fill
+                        </button>
                       </div>
                     </div>
                   ))}
