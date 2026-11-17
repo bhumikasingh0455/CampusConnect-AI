@@ -5,7 +5,7 @@ const authenticate = require('../middleware/auth');
 const authorize = require('../middleware/role');
 
 router.get('/dashboard/overview', authenticate, authorize('student'), getStudentDashboardOverview);
-router.get('/', authenticate, authorize('admin', 'faculty'), getStudents);
+router.get('/', authenticate, authorize('admin', 'faculty', 'warden'), getStudents);
 router.get('/:id', authenticate, getStudentById);
 router.post('/', authenticate, authorize('admin'), createStudent);
 router.put('/:id', authenticate, updateStudent);

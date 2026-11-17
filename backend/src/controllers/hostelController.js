@@ -167,7 +167,7 @@ exports.getRooms = async (req, res) => {
 
     let rooms = await HostelRoom.find(filter)
       .populate('hostel', 'name code type')
-      .populate('block', 'blockName totalFloors')
+      .populate('block', 'name blockName code totalFloors')
       .sort({ roomNumber: 1 });
 
     if (onlyAvailable === 'true') {
@@ -184,7 +184,7 @@ exports.getRoomById = async (req, res) => {
   try {
     const room = await HostelRoom.findById(req.params.id)
       .populate('hostel', 'name code type')
-      .populate('block', 'blockName totalFloors');
+      .populate('block', 'name blockName code totalFloors');
 
     if (!room) {
       return errorResponse(res, 'Room not found.', 404);
@@ -411,7 +411,7 @@ exports.getMyAllocation = async (req, res) => {
       status: { $in: ['Active', 'Transfer_Requested'] }
     })
       .populate('hostel', 'name code type location contactNumber chiefWarden wardens')
-      .populate('block', 'blockName totalFloors')
+      .populate('block', 'name blockName code totalFloors')
       .populate('room', 'roomNumber floor roomType capacity occupiedBeds monthlyRent amenities status');
 
     if (!allocation) {
@@ -1311,7 +1311,7 @@ exports.getStudentHostelDashboard = async (req, res) => {
       status: { $in: ['Active', 'Transfer_Requested'] }
     })
       .populate('hostel', 'name code type location contactNumber chiefWarden wardens')
-      .populate('block', 'blockName totalFloors')
+      .populate('block', 'name blockName code totalFloors')
       .populate('room', 'roomNumber floor roomType capacity occupiedBeds monthlyRent amenities status');
 
     if (!allocation) {

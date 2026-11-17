@@ -53,26 +53,31 @@ const WardenRooms = () => {
   const fetchRoomsAndHostels = async () => {
     try {
       setLoading(true);
-      const [roomsRes, hostelsRes, studentsRes] = await Promise.all([
-        api.get(`/hostel/rooms?${selectedHostel ? `hostel=${selectedHostel}&` : ''}${roomTypeFilter ? `roomType=${roomTypeFilter}&` : ''}${onlyAvailable ? 'onlyAvailable=true' : ''}`),
-        api.get('/hostel/hostels'),
-        api.get('/students?limit=100')
+      const roomsPromise = api.get(`/hostel/rooms?${selectedHostel ? `hostel=${selectedHostel}&` : ''}${roomTypeFilter ? `roomType=${roomTypeFilter}&` : ''}${onlyAvailable ? 'onlyAvailable=true' : ''}`);
+      const hostelsPromise = api.get('/hostel/hostels');
+      const studentsPromise = api.get('/students?limit=100');
+
+      const [roomsResult, hostelsResult, studentsResult] = await Promise.allSettled([
+        roomsPromise,
+        hostelsPromise,
+        studentsPromise
       ]);
 
-      if (roomsRes.data.success) {
-        setRooms(roomsRes.data.data || []);
+      if (roomsResult.status === 'fulfilled' && roomsResult.value.data.success) {
+        setRooms(roomsResult.value.data.data || []);
+      } else if (roomsResult.status === 'rejected') {
+        console.warn('Rooms fetch error:', roomsResult.reason);
       }
-      if (hostelsRes.data.success) {
-        setHostels(hostelsRes.data.data || []);
-        if (!selectedHostel && hostelsRes.data.data?.length > 0) {
-          // optionally set default hostel
-        }
+
+      if (hostelsResult.status === 'fulfilled' && hostelsResult.value.data.success) {
+        setHostels(hostelsResult.value.data.data || []);
       }
-      if (studentsRes.data.success) {
-        setStudents(studentsRes.data.data?.students || studentsRes.data.data || []);
+
+      if (studentsResult.status === 'fulfilled' && studentsResult.value.data.success) {
+        setStudents(studentsResult.value.data.data?.students || studentsResult.value.data.data || []);
       }
     } catch (err) {
-      toast.error('Failed to load rooms inventory');
+      console.error('Failed to load rooms inventory:', err);
     } finally {
       setLoading(false);
     }
@@ -332,9 +337,10 @@ const WardenRooms = () => {
               <option value="">-- Choose Student --</option>
               {students.map((st) => {
                 const u = st.user || st;
+                if (!u || !u._id) return null;
                 return (
                   <option key={u._id} value={u._id}>
-                    {u.name} ({u.email})
+                    {u.name || 'Student'} ({st.rollNumber ? `${st.rollNumber} • ` : ''}{u.email})
                   </option>
                 );
               })}

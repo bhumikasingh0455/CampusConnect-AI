@@ -49,19 +49,25 @@ const WardenGate = () => {
       if (lateOnly) query.push(`isLateEntry=true`);
       const qs = query.length > 0 ? `?${query.join('&')}` : '';
 
-      const [logsRes, studentsRes] = await Promise.all([
-        api.get(`/hostel/gate/all-logs${qs}`),
-        api.get('/students?limit=100')
+      const logsPromise = api.get(`/hostel/gate/all-logs${qs}`);
+      const studentsPromise = api.get('/students?limit=100');
+
+      const [logsResult, studentsResult] = await Promise.allSettled([
+        logsPromise,
+        studentsPromise
       ]);
 
-      if (logsRes.data.success) {
-        setLogs(logsRes.data.data || []);
+      if (logsResult.status === 'fulfilled' && logsResult.value.data.success) {
+        setLogs(logsResult.value.data.data || []);
+      } else if (logsResult.status === 'rejected') {
+        console.warn('Gate logs fetch error:', logsResult.reason);
       }
-      if (studentsRes.data.success) {
-        setStudents(studentsRes.data.data?.students || studentsRes.data.data || []);
+
+      if (studentsResult.status === 'fulfilled' && studentsResult.value.data.success) {
+        setStudents(studentsResult.value.data.data?.students || studentsResult.value.data.data || []);
       }
     } catch (err) {
-      toast.error('Failed to load gate logs');
+      console.error('Failed to load gate data:', err);
     } finally {
       setLoading(false);
     }
@@ -269,8 +275,11 @@ const WardenGate = () => {
               <option value="">-- Choose Student --</option>
               {students.map((st) => {
                 const u = st.user || st;
+                if (!u || !u._id) return null;
                 return (
-                  <option key={u._id} value={u._id}>{u.name} ({u.email})</option>
+                  <option key={u._id} value={u._id}>
+                    {u.name || 'Student'} ({st.rollNumber ? `${st.rollNumber} • ` : ''}{u.email})
+                  </option>
                 );
               })}
             </select>
