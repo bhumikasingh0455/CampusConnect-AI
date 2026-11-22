@@ -8,7 +8,8 @@ import {
   Shield,
   User,
   Sparkles,
-  LogIn
+  LogIn,
+  Home
 } from 'lucide-react';
 
 const DemoBanner = () => {
@@ -48,6 +49,15 @@ const DemoBanner = () => {
 
         {/* Center/Right: Persona Switcher */}
         <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap justify-center text-xs">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white/10 text-amber-300 hover:bg-white/20 transition-all mr-1"
+            title="Return to Welcome Showcase Page"
+          >
+            <Home className="w-3 h-3" />
+            <span>Welcome Page</span>
+          </Link>
+
           <span className="text-[11px] text-slate-300 font-semibold mr-1 hidden sm:inline">
             Switch Persona:
           </span>

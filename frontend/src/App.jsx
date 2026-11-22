@@ -66,6 +66,7 @@ import AdminHostel from './pages/admin/AdminHostel';
 import AnnouncementsPage from './pages/shared/AnnouncementsPage';
 import ProfilePage from './pages/shared/ProfilePage';
 import NotFoundPage from './pages/shared/NotFoundPage';
+import WelcomePage from './pages/shared/WelcomePage';
 
 // Smart Root Redirect based on active role (Opens directly into live demo without sign-in)
 const RootRedirect = () => {
@@ -93,9 +94,11 @@ function App() {
             <Toaster position="top-right" />
             <Routes>
               {/* Public routes */}
+              <Route path="/" element={<WelcomePage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/" element={<RootRedirect />} />
+              <Route path="/dashboard" element={<RootRedirect />} />
 
               {/* Authenticated Layout */}
               <Route element={<ProtectedRoute />}>
