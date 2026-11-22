@@ -803,6 +803,18 @@ export const DEMO_DATA = {
 
   // 12. Warden Dashboard
   wardenDashboard: {
+    occupiedBeds: 320,
+    availableBeds: 24,
+    totalCapacity: 344,
+    totalRooms: 172,
+    occupancyRate: 93.0,
+    pendingLeaves: 3,
+    studentsOnLeave: 2,
+    openComplaints: 2,
+    feeSummary: {
+      totalCollected: 1420000,
+      totalOutstanding: 180000
+    },
     stats: {
       totalResidents: 320,
       availableBeds: 24,
@@ -819,6 +831,7 @@ export const DEMO_DATA = {
         category: 'Electricity',
         priority: 'Medium',
         status: 'In Progress',
+        room: { roomNumber: '204' },
         student: { name: 'Devon Lee', email: 'devon.lee@campusconnect.edu' },
         createdAt: new Date().toISOString()
       },
@@ -830,11 +843,12 @@ export const DEMO_DATA = {
         category: 'Water Supply',
         priority: 'High',
         status: 'Submitted',
+        room: { roomNumber: '302' },
         student: { name: 'Alex Rivera', email: 'student@campusconnect.edu' },
         createdAt: new Date(Date.now() - 3600000 * 5).toISOString()
       }
     ],
-    studentsOnLeave: [
+    studentsOnLeaveList: [
       {
         _id: 'leave-w1',
         student: { name: 'Maya Patel', rollNumber: '23CSE048', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' },
@@ -860,7 +874,7 @@ export const DEMO_DATA = {
         isOverdue: false
       }
     ],
-    recentMovements: [
+    recentGateLogs: [
       {
         _id: 'mov-1',
         student: { name: 'Alex Rivera', email: 'student@campusconnect.edu' },

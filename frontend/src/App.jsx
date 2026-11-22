@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppLayout from './components/layout/AppLayout';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage';
@@ -92,7 +93,8 @@ function App() {
         <SocketProvider>
           <BrowserRouter>
             <Toaster position="top-right" />
-            <Routes>
+            <ErrorBoundary>
+              <Routes>
               {/* Public routes */}
               <Route path="/" element={<WelcomePage />} />
               <Route path="/welcome" element={<WelcomePage />} />
@@ -169,6 +171,7 @@ function App() {
               {/* 404 Route */}
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
+          </ErrorBoundary>
           </BrowserRouter>
         </SocketProvider>
       </AuthProvider>

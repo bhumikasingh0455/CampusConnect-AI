@@ -111,7 +111,7 @@ const WardenDashboard = () => {
                 {analytics?.occupancyRate || 0}%
               </span>
               <span className="text-xs text-slate-500">
-                ({analytics?.occupiedBeds}/{analytics?.totalCapacity} Beds)
+                ({analytics?.occupiedBeds || 0}/{analytics?.totalCapacity || 350} Beds)
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-1">
@@ -136,7 +136,7 @@ const WardenDashboard = () => {
               <Badge variant="warning" size="sm">Action Needed</Badge>
             </div>
             <p className="text-xs text-slate-400 mt-1">
-              {analytics?.studentsOnLeave || 0} currently on approved leave
+              {Array.isArray(analytics?.studentsOnLeave) ? analytics.studentsOnLeave.length : (analytics?.studentsOnLeave || 0)} currently on approved leave
             </p>
           </Card>
         </Link>
@@ -209,11 +209,11 @@ const WardenDashboard = () => {
           <div className="flex justify-center gap-6 text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-indigo-500" />
-              <span className="text-slate-600 dark:text-slate-300">Occupied ({analytics?.occupiedBeds})</span>
+              <span className="text-slate-600 dark:text-slate-300">Occupied ({analytics?.occupiedBeds || 0})</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-emerald-500" />
-              <span className="text-slate-600 dark:text-slate-300">Available ({analytics?.availableBeds})</span>
+              <span className="text-slate-600 dark:text-slate-300">Available ({analytics?.availableBeds || 0})</span>
             </div>
           </div>
         </Card>
