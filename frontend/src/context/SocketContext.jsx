@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
+import { DEMO_DATA } from '../api/demoData';
 import toast from 'react-hot-toast';
 
 const SocketContext = createContext();
@@ -8,10 +9,23 @@ const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
   const { user, token } = useAuth();
   const [socket, setSocket] = useState(null);
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState(DEMO_DATA.notifications || []);
+  const [unreadCount, setUnreadCount] = useState(2);
 
   useEffect(() => {
+    const isRealUser = localStorage.getItem('isRealUser') === 'true';
+
+    // In Live Demo Mode, do not initiate heavy WebSocket retries to sleeping Render servers
+    if (!isRealUser) {
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+      }
+      setNotifications(DEMO_DATA.notifications || []);
+      setUnreadCount(2);
+      return;
+    }
+
     if (!token || !user) {
       if (socket) {
         socket.disconnect();
@@ -23,7 +37,9 @@ export const SocketProvider = ({ children }) => {
     const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
     const socketInstance = io(socketUrl, {
       auth: { token },
-      query: { token }
+      query: { token },
+      reconnectionAttempts: 3,
+      timeout: 5000
     });
 
     socketInstance.on('connect', () => {
