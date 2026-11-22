@@ -67,11 +67,10 @@ import AnnouncementsPage from './pages/shared/AnnouncementsPage';
 import ProfilePage from './pages/shared/ProfilePage';
 import NotFoundPage from './pages/shared/NotFoundPage';
 
-// Smart Root Redirect based on active role
+// Smart Root Redirect based on active role (Opens directly into live demo without sign-in)
 const RootRedirect = () => {
-  const { user, isAuthenticated, loading } = useAuth();
+  const { user, loading } = useAuth();
   if (loading) return null;
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   const roleRedirects = {
     admin: '/admin/dashboard',
@@ -81,7 +80,8 @@ const RootRedirect = () => {
     parent: '/parent/dashboard'
   };
 
-  return <Navigate to={roleRedirects[user.role] || '/login'} replace />;
+  const targetRole = user?.role || 'student';
+  return <Navigate to={roleRedirects[targetRole] || '/student/dashboard'} replace />;
 };
 
 function App() {

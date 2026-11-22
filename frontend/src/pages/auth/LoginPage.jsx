@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, isAuthenticated, login } = useAuth();
+  const { user, isAuthenticated, login, switchDemoRole } = useAuth();
   const navigate = useNavigate();
 
   // If already authenticated, redirect to role dashboard
@@ -133,6 +133,36 @@ const LoginPage = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
         <div className="bg-white dark:bg-slate-900 py-8 px-6 sm:px-10 shadow-2xl rounded-3xl border border-slate-200 dark:border-slate-800">
+          {/* Direct Live Demo Access (No sign-in required) */}
+          <div className="mb-5 p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-indigo-500/10 to-purple-500/10 border border-emerald-500/30 text-center">
+            <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 flex items-center justify-center gap-1.5 mb-1">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Live Public Demo Active</span>
+            </p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+              No sign-in required. Explore all 5 roles and features directly:
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                const nextRoute = switchDemoRole('student');
+                navigate(nextRoute);
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 via-indigo-600 to-purple-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-500/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+            >
+              <span>Explore Live Demo Without Sign-In</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="relative flex items-center justify-center mb-4">
+            <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
+            <span className="bg-white dark:bg-slate-900 px-2 text-[10px] uppercase font-bold text-slate-400 shrink-0">
+              Or Sign In With Account
+            </span>
+            <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
+          </div>
+
           <form className="space-y-4" onSubmit={handleLogin}>
             <div>
               <label htmlFor="institutional_email" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
